@@ -1,0 +1,28 @@
+name: Weekly Grocery Scrape
+
+on:
+  schedule:
+    # 13:00 UTC is 6:00 AM MST (El Paso Time)
+    - cron: '0 13 * * 3'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install pandas requests
+      - name: Run Scraper
+        run: python app.py
+      - name: Commit and Push CSV
+        run: |
+          git config --global user.name 'GroceryBot'
+          git config --global user.email 'bot@example.com'
+          git add el_paso_grocery_comparison_sample.csv
+          git commit -m "Friday Price Update"
+          git push
