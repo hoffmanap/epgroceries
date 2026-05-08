@@ -8,14 +8,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # This line explicitly asks for write permission
+    permissions:
+      contents: write
+    
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Updated to v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # Updated to v5
         with:
-          python-version: '3.9'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
@@ -30,5 +34,6 @@ jobs:
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
           git add el_paso_grocery_comparison_sample.csv
-          git commit -m "Update El Paso Prices" || echo "No changes to commit"
+          # The 'exit 0' prevents the 128 error if nothing changed
+          git commit -m "Update El Paso Prices" || exit 0
           git push
