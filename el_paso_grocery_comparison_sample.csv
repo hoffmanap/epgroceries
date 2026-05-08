@@ -1,0 +1,22 @@
+Store,Item,Price,Checkout_Price,Price_Type
+Smith's (Kroger),"Milk (1gal, Whole)",3.69,3.69,Standard Retail
+Smith's (Kroger),"Eggs (Large, Dozen)",2.49,2.49,Standard Retail
+Smith's (Kroger),"Bread (White, 20oz)",1.99,1.99,Standard Retail
+Smith's (Kroger),Chicken Breast (1lb),4.99,4.99,Standard Retail
+Smith's (Kroger),"Avocados (Hass, ea)",1.25,1.25,Standard Retail
+Smith's (Kroger),Bananas (1lb),0.58,0.58,Standard Retail
+Smith's (Kroger),"Ground Beef (80/20, 1lb)",5.49,5.49,Standard Retail
+Sprouts,"Milk (1gal, Whole)",4.49,4.49,Standard Retail
+Sprouts,"Eggs (Large, Dozen)",3.99,3.99,Standard Retail
+Sprouts,"Bread (White, 20oz)",3.29,3.29,Standard Retail
+Sprouts,Chicken Breast (1lb),5.99,5.99,Standard Retail
+Sprouts,"Avocados (Hass, ea)",0.88,0.88,Standard Retail
+Sprouts,Bananas (1lb),0.69,0.69,Standard Retail
+Sprouts,"Ground Beef (80/20, 1lb)",6.99,6.99,Standard Retail
+Food King,"Milk (1gal, Whole)",3.1,3.41,Cost + 10%
+Food King,"Eggs (Large, Dozen)",2.15,2.37,Cost + 10%
+Food King,"Bread (White, 20oz)",1.5,1.65,Cost + 10%
+Food King,Chicken Breast (1lb),3.9,4.29,Cost + 10%
+Food King,"Avocados (Hass, ea)",0.95,1.04,Cost + 10%
+Food King,Bananas (1lb),0.48,0.53,Cost + 10%
+Food King,"Ground Beef (80/20, 1lb)",4.5,4.95,Cost + 10%
