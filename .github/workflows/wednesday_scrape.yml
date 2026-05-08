@@ -2,9 +2,8 @@ name: Weekly Grocery Scrape
 
 on:
   schedule:
-    # 13:00 UTC is 6:00 AM MST (El Paso Time)
     - cron: '0 13 * * 3'
-workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   build:
