@@ -7,29 +7,31 @@ import plotly.express as px
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_FILE = os.path.join(BASE_DIR, "el_paso_grocery_comparison_sample.csv")
 
-# --- 2. DATA LOADING & EL PASO MATH ---
+# --- 2. DATA LOADING (SELF-HEALING & DATE-AWARE) ---
 def load_data():
     if os.path.exists(CSV_FILE):
         df = pd.read_csv(CSV_FILE)
+        
+        # FIX: If 'Date' column is missing, add today's date to all rows
+        if 'Date' not in df.columns:
+            from datetime import date
+            df['Date'] = str(date.today())
+            # Save it back so the error doesn't happen again
+            df.to_csv(CSV_FILE, index=False)
+            
+        return df
     else:
-        # Create a starter set with historical dates if file is missing
-        data = {
-            "Date": ["2026-05-06", "2026-05-06", "2026-05-06", "2026-05-13", "2026-05-13", "2026-05-13"],
-            "Store": ["Smith's (Kroger)", "Sprouts", "Food King", "Smith's (Kroger)", "Sprouts", "Food King"],
-            "Item": ["Milk (1gal)", "Milk (1gal)", "Milk (1gal)", "Milk (1gal)", "Milk (1gal)", "Milk (1gal)"],
-            "Price": [3.69, 4.49, 3.10, 3.75, 4.55, 3.15]
+        # Create a full starter set with the 'Date' column included
+        from datetime import date
+        starter_data = {
+            "Date": [str(date.today())] * 3,
+            "Store": ["Smith's (Kroger)", "Sprouts", "Food King"],
+            "Item": ["Milk (1gal)", "Milk (1gal)", "Milk (1gal)"],
+            "Price": [3.69, 4.49, 3.10]
         }
-        df = pd.DataFrame(data)
-        df.to_csv(CSV_FILE, index=False)
-    
-    # Apply Food King 10% Math
-    df['Checkout Total'] = df.apply(
-        lambda x: round(x['Price'] * 1.10, 2) if "food king" in str(x['Store']).lower() else x['Price'], 
-        axis=1
-    )
-    # Ensure Date is actually a datetime object for the chart
-    df['Date'] = pd.to_datetime(df['Date'])
-    return df
+        df_starter = pd.DataFrame(starter_data)
+        df_starter.to_csv(CSV_FILE, index=False)
+        return df_starter
 
 df = load_data()
 
