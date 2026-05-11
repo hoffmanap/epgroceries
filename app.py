@@ -1,59 +1,41 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px  # Make sure this is in your requirements.txt!
 import os
 
-# --- CONFIGURATION ---
-# This matches the file name in your GitHub repository
+# --- 1. DATA LOADING ---
 CSV_FILE = "el_paso_grocery_comparison_sample.csv"
-
-# --- 1. DATA LOADING/FETCHING ---
-# We check if the file exists. If it does, we load it. 
-# In the future, your scraper script will update this file every Wednesday.
 if os.path.exists(CSV_FILE):
     df = pd.read_csv(CSV_FILE)
+    df['Date'] = pd.to_datetime(df['Date']) # Crucial for the line chart
 else:
-    # Fallback if the file is missing
-    st.error(f"Could not find {CSV_FILE}. Please make sure it is in your repository.")
+    st.error("CSV not found!")
     st.stop()
 
-# --- 2. DATA PROCESSING (The Loop) ---
-# We ensure the Food King math is applied to every row in the 'Price' column.
-# This loop looks at each row and creates the 'Checkout_Price' we want.
-processed_rows = []
-for index, row in df.iterrows():
-    raw_price = row['Price']
-    store_name = row['Store']
-    
-    # Apply Food King 10% Surcharge
-    if "Food King" in store_name:
-        checkout_price = round(raw_price * 1.10, 2)
-    else:
-        checkout_price = raw_price
-    
-    processed_rows.append({
-        "Store": store_name,
-        "Item": row['Item'],
-        "Shelf Price": raw_price,
-        "Checkout Total": checkout_price
-    })
+# --- 2. DATA PROCESSING (Calculations) ---
+# ... (Your existing loop that adds the 10% for Food King) ...
 
-# Create our final display DataFrame
-final_df = pd.DataFrame(processed_rows)
+# ---------------------------------------------------------
+# --- 3. THE NEW VISUALIZATION (INSERT HERE) ---
+# ---------------------------------------------------------
+st.title("📈 El Paso Grocery Price Trends")
 
-# --- 3. STREAMLIT DISPLAY ---
-st.set_page_config(page_title="El Paso Grocery Tracker", page_icon="🌵")
+# Filter by Item so the line chart isn't messy
+item_to_plot = st.selectbox("Select Item to Track", df['Item'].unique())
+filtered_df = df[df['Item'] == item_to_plot]
 
-st.title("🌵 El Paso Grocery Price Tracker")
-st.markdown(f"**Target City:** El Paso, TX | **Update Day:** Wednesday")
-
-# Highlight the cheapest option for each item
-st.subheader("Current Price Comparison")
-st.dataframe(
-    final_df.style.highlight_min(axis=0, subset=['Checkout Total'], color='#D4EDDA'),
-    use_container_width=True
+# Create the Line Chart
+fig = px.line(
+    filtered_df, 
+    x="Date", 
+    y="Checkout_Price", 
+    color="Store",
+    title=f"Price History: {item_to_plot}",
+    markers=True
 )
+st.plotly_chart(fig, use_container_width=True)
+# ---------------------------------------------------------
 
-st.info("💡 **Note:** Food King prices include the mandatory 10% 'Cost Plus' surcharge.")
-
-# Optional: Add a simple bar chart
-st.bar_chart(data=final_df, x="Item", y="Checkout Total", color="Store")
+# --- 4. DATA TABLE (Keep this at the bottom) ---
+st.subheader("Raw Price Data")
+st.dataframe(filtered_df)
