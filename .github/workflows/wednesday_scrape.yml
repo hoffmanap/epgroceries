@@ -2,22 +2,24 @@ name: Weekly Grocery Scrape
 
 on:
   schedule:
+    # Runs every Wednesday at 13:00 UTC (7:00 AM MST in El Paso)
     - cron: '0 13 * * 3'
-  workflow_dispatch:
+  workflow_dispatch: # Allows you to manually click "Run workflow" anytime
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # This line explicitly asks for write permission
+    
+    # Crucial permission block that allows the Action to write back to your repo
     permissions:
       contents: write
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Updated to v4
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5 # Updated to v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -27,13 +29,13 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Scraper
-        run: python app.py
+        run: python scraper.py # Runs the script that appends data instead of the dashboard
 
       - name: Commit and Push CSV
         run: |
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
           git add el_paso_grocery_comparison_sample.csv
-          # The 'exit 0' prevents the 128 error if nothing changed
-          git commit -m "Update El Paso Prices" || exit 0
+          # If no prices changed, '|| exit 0' ensures the workflow doesn't throw an error
+          git commit -m "Update El Paso Weekly Prices" || exit 0
           git push
